@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saath</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Mukta:wght@400;500;700&family=Noto+Sans+Malayalam:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a phone-width app shell, calm misty surfaces, marigold for "reach out" actions, teal for calm. Night Mode is its own deep-indigo world. */
+:root{
+  --bg:#EAF0EE; --surface:#FFFFFF; --ink:#1B2A31; --muted:#5A6B71; --line:#D3DDDA;
+  --accent:#D98A1F; --accent-ink:#FFFFFF; --accent-soft:#FBEBD2;
+  --calm:#2C6A6F; --calm-soft:#DCEBEA; --danger:#B3402F; --danger-soft:#F7E1DC;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:"Mukta","Noto Sans Malayalam","Noto Sans Tamil","Noto Naskh Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F191E; --surface:#16242A; --ink:#E4EDEB; --muted:#93A5A8; --line:#25363C;
+    --accent:#EFAA45; --accent-ink:#1E1404; --accent-soft:#3A2C16;
+    --calm:#73B5B7; --calm-soft:#1C3236; --danger:#E77B69; --danger-soft:#3A201B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F191E; --surface:#16242A; --ink:#E4EDEB; --muted:#93A5A8; --line:#25363C;
+  --accent:#EFAA45; --accent-ink:#1E1404; --accent-soft:#3A2C16;
+  --calm:#73B5B7; --calm-soft:#1C3236; --danger:#E77B69; --danger-soft:#3A201B;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:var(--calm)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{max-width:520px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px 6px}
+.brand{font-family:var(--display);font-weight:650;font-size:26px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.brand svg{width:26px;height:26px}
+.sos{border:1px solid var(--danger);color:var(--danger);background:transparent;border-radius:999px;padding:6px 14px;font-weight:500;cursor:pointer}
+main{flex:1;padding:8px 18px 110px;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--display);font-weight:650;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:28px} h2{font-size:21px} h3{font-size:18px}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card.accent{background:var(--accent-soft);border-color:transparent}
+.card.calm{background:var(--calm-soft);border-color:transparent}
+.card.danger{background:var(--danger-soft);border-color:var(--danger)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.stack{display:flex;flex-direction:column;gap:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:500;cursor:pointer;background:var(--calm);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;min-height:44px}
+:root[data-theme="dark"] .btn, .btn{color:var(--surface)}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:var(--danger);color:#fff}
+.btn.sm{padding:7px 12px;min-height:36px;font-size:15px;border-radius:10px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 13px;cursor:pointer;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--calm);border-color:var(--calm);color:var(--surface)}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:500;background:var(--calm-soft);color:var(--calm)}
+.pill.warn{background:var(--accent-soft);color:var(--accent)}
+.pill.bad{background:var(--danger-soft);color:var(--danger)}
+label{font-size:14px;color:var(--muted);font-weight:500}
+input[type=text],input[type=tel],input[type=number],textarea,select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 13px}
+textarea{resize:vertical;min-height:90px}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;min-height:96px}
+.tile b{font-family:var(--display);font-weight:650;font-size:17px}
+.tile span{font-size:14px;color:var(--muted);line-height:1.35}
+.tile .ic{width:28px;height:28px;color:var(--calm)}
+.moods{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.mood{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px}
+.mood i{font-style:normal;font-size:22px}
+.mood[aria-pressed="true"]{border-color:var(--calm);background:var(--calm-soft)}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs .in{max-width:520px;width:100%;display:grid;grid-template-columns:repeat(5,1fr)}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 10px;font-size:12px;color:var(--muted);text-decoration:none}
+nav.tabs a svg{width:23px;height:23px}
+nav.tabs a[aria-current="page"]{color:var(--calm);font-weight:700}
+/* chat */
+.chat{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:86%;padding:10px 14px;border-radius:18px;white-space:pre-wrap;word-wrap:break-word}
+.msg.ai{background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.me{background:var(--calm);color:var(--surface);border-bottom-right-radius:6px;align-self:flex-end}
+.msg.tip{background:var(--accent-soft);align-self:stretch;max-width:100%;font-size:15px}
+.composer{position:sticky;bottom:78px;background:var(--bg);padding-top:6px;display:flex;gap:8px;align-items:flex-end}
+.composer textarea{min-height:48px;max-height:140px;flex:1}
+.iconbtn{width:48px;height:48px;border-radius:14px;border:1px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.iconbtn svg{width:22px;height:22px}
+.iconbtn.on{background:var(--danger);border-color:var(--danger);color:#fff}
+.iconbtn.send{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.typing{color:var(--muted);font-size:15px}
+.list{display:flex;flex-direction:column;gap:10px}
+.person{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--calm-soft);color:var(--calm);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:650;font-size:18px}
+.meter{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--calm)}
+.meter i.warn{background:var(--accent)} .meter i.bad{background:var(--danger)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:110px;padding-top:6px;border-bottom:1px solid var(--line)}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
+.bars b{display:block;width:100%;background:var(--calm);border-radius:6px 6px 0 0;min-height:2px}
+.bars b.hi{background:var(--accent)}
+.bars span{font-size:12px;color:var(--muted)}
+.stat{display:flex;flex-direction:column}
+.stat strong{font-family:var(--display);font-size:30px;font-variant-numeric:tabular-nums;line-height:1.1}
+.post{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+.post:first-child{border-top:0;padding-top:0}
+.sheet-wrap{position:fixed;inset:0;background:rgba(10,18,22,.55);display:flex;align-items:flex-end;justify-content:center;z-index:30}
+.sheet{background:var(--surface);width:100%;max-width:520px;max-height:90%;overflow:auto;border-radius:22px 22px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:92px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:40;font-size:15px;max-width:90%}
+.hl{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.hl:first-of-type{border-top:0}
+.hl strong{font-variant-numeric:tabular-nums;font-size:19px;white-space:nowrap}
+ul.clean{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+/* Night world */
+.night{position:fixed;inset:0;z-index:20;overflow:auto;color:#E8E6FF;
+  background:radial-gradient(1px 1px at 12% 18%,#fff8,transparent),radial-gradient(1px 1px at 72% 12%,#fff6,transparent),radial-gradient(1.5px 1.5px at 40% 30%,#fff5,transparent),radial-gradient(1px 1px at 85% 40%,#fff7,transparent),radial-gradient(1px 1px at 25% 60%,#fff4,transparent),linear-gradient(180deg,#070B1E 0%,#11163A 60%,#1C1A45 100%);
+  color-scheme:dark}
+.night .inner{max-width:520px;margin:0 auto;padding:18px 18px 60px;display:flex;flex-direction:column;gap:18px}
+.night h1,.night h2{color:#F3EEFF}
+.night .card{background:#ffffff0d;border-color:#ffffff1f}
+.night textarea{background:#ffffff0f;border-color:#ffffff26;color:#F3EEFF}
+.night .muted{color:#A9A6D6}
+.night .chip{background:transparent;border-color:#ffffff33;color:#E8E6FF}
+.night .chip[aria-pressed="true"]{background:#8C86E8;border-color:#8C86E8;color:#0B0F27}
+.night .btn{background:#8C86E8;color:#0B0F27}
+.night .btn.ghost{background:transparent;color:#E8E6FF;border-color:#ffffff33}
+.breath{width:200px;height:200px;margin:10px auto;border-radius:50%;background:radial-gradient(circle,#B9B3FF55,#8C86E822 60%,transparent 70%);display:flex;align-items:center;justify-content:center;transition:transform 4s ease-in-out;font-size:20px;color:#F3EEFF}
+.story{white-space:pre-wrap;font-size:19px;line-height:1.7;font-family:var(--display);font-weight:500}
+@media (prefers-reduced-motion: reduce){.breath{transition:none}}
+@media (max-width:380px){.tiles{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a href="#home" class="brand" style="color:inherit;text-decoration:none" aria-label="Saath home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="12" cy="16" r="8" fill="none" stroke="var(--calm)" stroke-width="2.4"/><circle cx="20" cy="16" r="8" fill="none" stroke="var(--accent)" stroke-width="2.4"/></svg>
+      Saath
+    </a>
+    <button class="sos" data-act="help" type="button">Need help now</button>
+  </header>
+  <main id="view" aria-live="polite"></main>
+  <nav class="tabs" aria-label="Main">
+    <div class="in" id="tabs"></div>
+  </nav>
+</div>
+<div id="layer"></div>
+
+<script>
+/* ============ Small helpers ============ */
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+const DAY = 86400000;
+const now = () => Date.now();
+function toast(t, ms=2600){ const el=document.createElement("div"); el.className="toast"; el.textContent=t; document.body.appendChild(el); setTimeout(()=>el.remove(), ms); }
+function daysAgo(ts){ if(!ts) return null; return Math.floor((now()-ts)/DAY); }
+function ago(ts){ const d=daysAgo(ts); if(d===null) return "never"; if(d===0) return "today"; if(d===1) return "yesterday"; return d+" days ago"; }
+
+const ICON = {
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>',
+  talk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>',
+  people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"/></svg>',
+  night:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l16-8-6 16-2.5-6.5z"/></svg>',
+  speaker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4h4M12 4v3"/><circle cx="12" cy="14" r="7"/><path d="M12 11v3l2 2"/></svg>',
+  reach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h11M11 7l5 5-5 5"/><circle cx="19" cy="12" r="1.6"/></svg>',
+  box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+  groups:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="6" r="2.4"/><circle cx="5.5" cy="16" r="2.4"/><circle cx="18.5" cy="16" r="2.4"/><path d="M9.5 8.5l-2.5 5M14.5 8.5l2.5 5M8 17h8"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20h16M7 16v-5M12 16V7M17 16v-8"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>'
+};
+
+/* ============ Reference data ============ */
+const LANGS = {
+  English:"English", Hinglish:"Hinglish (Hindi and English mixed, written in Latin letters, the way people text in India)",
+  Hindi:"Hindi in Devanagari script", Malayalam:"Malayalam in Malayalam script", Tamil:"Tamil in Tamil script",
+  Arabic:"simple, warm Arabic that Gulf speakers understand", Urdu:"Urdu in Urdu script"
+};
+const ZONES = [["Asia/Kolkata","India"],["Asia/Dubai","UAE"],["Asia/Karachi","Pakistan"],["Asia/Dhaka","Bangladesh"],["Asia/Colombo","Sri Lanka"],["Asia/Kathmandu","Nepal"],["Asia/Manila","Philippines"],["Asia/Riyadh","Saudi Arabia"],["Asia/Qatar","Qatar"],["Asia/Singapore","Singapore"],["Europe/London","UK"],["America/New_York","USA (East)"],["America/Toronto","Canada (Toronto)"],["Australia/Sydney","Australia (Sydney)"]];
+const HOMES = {"Dubai":"Asia/Dubai","Abu Dhabi":"Asia/Dubai","Other UAE":"Asia/Dubai","India":"Asia/Kolkata","Somewhere else":Intl.DateTimeFormat().resolvedOptions().timeZone||"Asia/Dubai"};
+const HELP = {
+  uae:[
+    ["National Hope line (call or WhatsApp, Arabic & English)","800 4673","tel:8004673"],
+    ["Dubai Itma'en support (9am to midnight)","800 506","tel:800506"],
+    ["Abu Dhabi Sakina line (24/7)","800 725462","tel:800725462"],
+    ["Emergency: police / ambulance","999 / 998","tel:999"]
+  ],
+  india:[
+    ["Tele-MANAS mental health line (24/7, many languages)","14416","tel:14416"],
+    ["Tele-MANAS toll-free","1-800-891-4416","tel:18008914416"],
+    ["Emergency","112","tel:112"]
+  ]
+};
+const GROUPS = [
+  ["home","Missing home","For anyone far from family: expats, hostel students, new jobs in a new city."],
+  ["pressure","Exams & career pressure","Results, placements, layoffs, the weight of everyone's expectations."],
+  ["family","Marriage & family pressure","Rishta talk, comparisons, and \"log kya kahenge\"."],
+  ["newcity","New in Dubai","Just moved and still finding your people."],
+  ["night","Night thinkers","Awake at 2am with a busy mind."]
+];
+const MOODS = [["😣","Heavy"],["😔","Low"],["😐","Okay"],["🙂","Calm"],["😊","Good"]];
+const CRISIS_RE = /(suicid|kill myself|end my life|end it all|want to die|wanna die|don'?t want to live|no reason to live|self[- ]?harm|cut myself|hurt myself|marna chah|mar jaana|mar jana|khudkushi|jeena nahi|aatmahatya|आत्महत्या|मरना चाह|ആത്മഹത്യ|தற்கொலை|انتحار|خودکشی)/i;
+
+/* ============ State ============ */
+const S = {
+  profile:{ name:"", lang:"English", home:"Dubai", voice:false, onboarded:false },
+  people:[], chat:[], memory:[], checkins:[], reachouts:[], unsaid:[], dumps:[], groupPosts:[], metoo:[]
+};
+const KEYS = Object.keys(S);
+const UI = { busy:false, analysis:null, crisis:false, mode:{type:"companion"}, draftReach:null, check:null, nightTab:"dump", story:"", nightReply:"", groupKey:"home", groupDocs:[], groupsSub:null, groupsLoading:false, groupsNote:"" };
+const caps = { sample:null, db:null, user:null, dictation:null, tts:null, ready:false };
+
+/* ============ Storage: private per-person cloud data, device fallback ============ */
+const Store = {
+  mode:"memory", uid:null, writing:{}, again:{}, timers:{}, readonly:false,
+  async init(){
+    if(caps.db && caps.user){
+      try{
+        const id = await caps.user.id();
+        if(id){
+          this.uid = id;
+          const snap = await Promise.race([
+            caps.db.collection("data/users/"+id).get(),
+            new Promise((_,rej)=>setTimeout(()=>rej({code:"timeout"}),10000))
+          ]);
+          snap.docs.forEach(d=>{ const v=d.data(); if(v && KEYS.includes(d.id) && "v" in v) S[d.id]=v.v; });
+          this.mode="cloud"; return;
+        }
+      }catch(e){ /* fall through to device storage */ }
+    }
+    try{ const raw=localStorage.getItem("saath:v1"); if(raw){ const o=JSON.parse(raw); KEYS.forEach(k=>{ if(k in o) S[k]=o[k]; }); } this.mode="device"; }
+    catch(e){ this.mode="memory"; }
+  },
+  save(key){
+    if(this.mode==="cloud"){ if(this.readonly) return; clearTimeout(this.timers[key]); this.timers[key]=setTimeout(()=>this.write(key),500); }
+    else if(this.mode==="device"){ try{ const o={}; KEYS.forEach(k=>o[k]=S[k]); localStorage.setItem("saath:v1",JSON.stringify(o)); }catch(e){} }
+  },
+  async write(key){
+    if(this.writing[key]){ this.again[key]=true; return; }
+    this.writing[key]=true;
+    try{ await caps.db.collection("data/users/"+this.uid).doc(key).set({v:S[key]}); }
+    catch(e){
+      if(e && e.code==="invalid_argument"){ this.readonly=true; toast("Your changes can't be saved. Ask the person who shared Saath to give you Contributor access.",5000); }
+      else if(e && e.code==="quota_exceeded"){ toast("Storage is full. Clear old chats in Settings."); }
+    }
+    this.writing[key]=false;
+    if(this.again[key]){ this.again[key]=false; this.write(key); }
+  },
+  async wipe(){
+    KEYS.forEach(k=>{ S[k]=Array.isArray(S[k])?[]:S[k]; });
+    S.profile={ name:"", lang:"English", home:"Dubai", voice:false, onboarded:false };
+    S.people=[];S.chat=[];S.memory=[];S.checkins=[];S.reachouts=[];S.unsaid=[];S.dumps=[];S.groupPosts=[];S.metoo=[];
+    if(this.mode==="cloud"){ for(const k of KEYS){ try{ await caps.db.collection("data/users/"+this.uid).doc(k).delete(); }catch(e){} } try{ if(caps.db) await caps.db.doc("circle_posts/"+this.uid).delete(); }catch(e){} }
+    try{ localStorage.removeItem("saath:v1"); }catch(e){}
+  }
+};
+function save(...keys){ keys.forEach(k=>Store.save(k)); }
+
+/* ============ AI helpers ============ */
+function region(){ return (S.profile.home==="India") ? "india" : "uae"; }
+function helplineText(){ const r=region(); const a=HELP[r].map(h=>h[0]+": "+h[1]); return a.join("; "); }
+function langLine(){ return "Reply in "+(LANGS[S.profile.lang]||"English")+". If the person clearly writes in another language, reply in theirs."; }
+function peopleLine(){ return S.people.length ? S.people.map(p=>p.name+(p.rel?" ("+p.rel+")":"")+(p.last?", last contact "+ago(p.last):"")).join("; ") : "none added yet"; }
+
+function companionPrompt(){
+  const name = S.profile.name || "the person";
+  if(UI.mode.type==="rehearse"){
+    return `You are helping ${name} rehearse saying something hard to ${UI.mode.who}. What they want to say: "${UI.mode.text}".
+Play ${UI.mode.who} realistically but kindly, in short replies (1-3 sentences), the way a real ${UI.mode.who} might react in an Indian or Gulf family/friendship context.
+After your in-character reply, add a new line that starts with "Tip:" and give one short, encouraging coaching tip about how ${name} phrased it.
+If ${name} says "stop" or "done", step out of character, praise their courage, and suggest they try saying it for real when ready.
+${langLine()}`;
+  }
+  return `You are Saath, a warm companion inside a wellbeing app for people who overthink and feel lonely. Most users live in India or the UAE; many are South Asian expats far from family.
+About the person: name ${S.profile.name||"unknown"}; lives in ${S.profile.home}. ${langLine()}
+People they care about: ${peopleLine()}.
+What you remember from earlier chats: ${S.memory.length?S.memory.slice(-6).join(" | "):"nothing yet"}.
+How to talk:
+- Short replies: 2 to 4 sentences, like a caring friend texting. No lists or headings.
+- First reflect what you heard in your own words. Ask at most one gentle question.
+- When they are stuck in a loop, gently move from "why" to "what now", and help separate what actually happened from what they are assuming.
+- Understand the context: family pressure, "log kya kahenge", visa and job worries, missing home, exams, marriage pressure, time-zone distance from family.
+- Your purpose is to help them feel less alone AND to reconnect them with real people. When they mention someone they miss or trust, gently suggest reaching out; the app has a Reach Out button that helps write the message. Never present yourself as a replacement for people, and never encourage them to rely only on you.
+- You are not a therapist or doctor. Do not diagnose. If heaviness has lasted weeks, encourage talking to a counsellor.
+- If they mention suicide, self-harm, or being in danger: respond with care, say they deserve support right now, urge them to contact a helpline or emergency services (${helplineText()}) or someone they trust, and stay with them.
+- Never shame or lecture.`;
+}
+function buildMessages(history, instructions){
+  const msgs=[]; let started=false;
+  history.forEach(m=>{
+    if(!started){ if(m.role!=="user") return; started=true; msgs.push({role:"user",content:instructions+"\n\n---\nThe conversation begins. The person says:\n"+m.content}); return; }
+    const last=msgs[msgs.length-1];
+    if(last && last.role===m.role){ last.content+="\n"+m.content; } else msgs.push({role:m.role,content:m.content});
+  });
+  return msgs;
+}
+function aiErrorText(e){
+  if(!e) return "Something went wrong. Try again in a moment.";
+  if(e.code==="not_granted") return "AI replies are switched off for you. Allow Saath to use Claude when asked, then try again.";
+  if(e.code==="rate_limited") return "Lots of messages at once. Wait a minute, then try again.";
+  return "I couldn't reply just now. Try again in a moment.";
+}
+function noAI(){ return !caps.sample; }
+const NO_AI_TEXT = "AI replies work when Saath is opened from its claude.ai link while you're signed in to Claude. Everything else here still works.";
+
+/* ============ Dictation (voice typing) ============ */
+const Dict = { target:null, base:"", finals:"", on:false, wired:false };
+function wireDictation(){
+  const d=caps.dictation; if(!d||Dict.wired) return; Dict.wired=true;
+  d.onPartial(({text})=>{ const el=Dict.target&&document.getElementById(Dict.target); if(el) el.value=(Dict.base+" "+Dict.finals+" "+text).replace(/\s+/g," ").trim(); });
+  d.onFinal(({text})=>{ Dict.finals+=" "+text; const el=Dict.target&&document.getElementById(Dict.target); if(el) el.value=(Dict.base+" "+Dict.finals).replace(/\s+/g," ").trim(); });
+  d.onState(({state})=>{ Dict.on = state==="listening"; document.querySelectorAll("[data-act=mic]").forEach(b=>{ b.classList.toggle("on",Dict.on && b.dataset.target===Dict.target); b.setAttribute("aria-pressed",String(Dict.on && b.dataset.target===Dict.target)); }); });
+}
+function micButton(target){ return caps.dictation ? `<button class="iconbtn" type="button" data-act="mic" data-target="${target}" aria-label="Speak instead of typing" aria-pressed="false">${ICON.mic}</button>` : ""; }
+function toggleMic(btn){
+  const d=caps.dictation; if(!d) return;
+  if(Dict.on){ d.stop().catch(()=>{}); return; }
+  Dict.target=btn.dataset.target; const el=document.getElementById(Dict.target);
+  Dict.base=el?el.value:""; Dict.finals="";
+  d.start().catch(e=>{ if(e&&e.code==="not_granted"){ toast("Microphone not allowed. You can keep typing."); } });
+}
+function speak(text){ if(caps.tts && S.profile.voice){ caps.tts.speak(String(text).slice(0,1900)).catch(()=>{}); } }
+
+/* ============ Routing ============ */
+const ROUTES = ["home","talk","check","reach","people","night","unsaid","groups","insights","prefs","more"];
+function route(){ const h=location.hash.replace("#",""); return ROUTES.includes(h)?h:"home"; }
+function go(r){ if(location.hash!=="#"+r) location.hash=r; else render(); }
+window.addEventListener("hashchange",()=>{ render(); window.scrollTo(0,0); });
+
+function renderTabs(){
+  const r=route();
+  const tabs=[["home","Home"],["talk","Talk"],["people","People"],["night","Night"],["more","More"]];
+  const moreSet=["more","check","reach","unsaid","groups","insights","prefs"];
+  $("#tabs").innerHTML=tabs.map(([k,l])=>{
+    const cur = k===r || (k==="more" && moreSet.includes(r));
+    return `<a href="#${k}" ${cur?'aria-current="page"':""}>${ICON[k]}<span>${l}</span></a>`;
+  }).join("");
+}
+
+/* ============ Views ============ */
+function greeting(){ const h=new Date().getHours(); return h<5?"Still awake":h<12?"Good morning":h<17?"Good afternoon":h<22?"Good evening":"It's late"; }
+function localTime(tz){ try{ return new Intl.DateTimeFormat("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit"}).format(new Date()); }catch(e){ return "--:--"; } }
+function localHour(tz){ try{ const p=new Intl.DateTimeFormat("en-GB",{timeZone:tz,hour:"numeric",hour12:false}).formatToParts(new Date()).find(x=>x.type==="hour"); return Number(p.value)%24; }catch(e){ return 12; } }
+function goodTime(tz){ const h=localHour(tz); return h>=9 && h<22; }
+function zoneName(tz){ const z=ZONES.find(x=>x[0]===tz); return z?z[1]:tz; }
+function overdue(p){ const d=daysAgo(p.last); return d===null?999:d-(p.every||7); }
+function monthCount(arr, fn){ const start=new Date(); start.setDate(1); start.setHours(0,0,0,0); return arr.filter(x=>x.ts>=start.getTime() && (!fn||fn(x))).length; }
+
+function vHome(){
+  const name=S.profile.name?(", "+esc(S.profile.name)):"";
+  const today=S.checkins.filter(c=>now()-c.ts<12*3600000).slice(-1)[0];
+  const follow=S.reachouts.filter(r=>r.status==="sent" && now()-r.ts>4*3600000).slice(-1)[0];
+  const nudge=[...S.people].sort((a,b)=>overdue(b)-overdue(a))[0];
+  const lastDump=S.dumps.filter(d=>!d.seen && now()-d.ts<20*3600000 && new Date().getHours()>=6).slice(-1)[0];
+  const reached=monthCount(S.reachouts);
+  const replied=monthCount(S.reachouts,r=>r.status==="replied");
+  return `
+  <section class="stack">
+    <h1>${greeting()}${name}.</h1>
+    <p class="muted">How is your mind right now?</p>
+    <div class="moods" role="group" aria-label="Mood">
+      ${MOODS.map((m,i)=>`<button type="button" class="mood" data-act="mood" data-v="${i+1}" aria-pressed="${today&&today.mood===i+1}"><i aria-hidden="true">${m[0]}</i>${m[1]}</button>`).join("")}
+    </div>
+    ${today?`<div class="row"><span class="muted small">Checked in ${new Date(today.ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}.</span>
+      <button type="button" class="chip" data-act="lonely" aria-pressed="${!!today.lonely}">I feel lonely</button></div>`:""}
+    ${today && (today.mood<=2 || today.lonely)?`<div class="card calm"><p>That sounds heavy. Do you want to talk it through, or reach someone you trust?</p>
+      <div class="row"><a class="btn" href="#talk">Talk it out</a><a class="btn primary" href="#reach">Reach out</a></div></div>`:""}
+  </section>
+
+  ${follow?`<div class="card accent">
+    <h3>Did ${esc(follow.person)} reply?</h3>
+    <p class="small">You reached out ${ago(follow.ts)}. Whatever happened, sending it took courage.</p>
+    <div class="row"><button class="btn sm" data-act="follow" data-id="${follow.id}" data-v="replied">Yes, we talked</button>
+    <button class="btn sm ghost" data-act="follow" data-id="${follow.id}" data-v="noreply">Not yet</button>
+    <button class="btn sm ghost" data-act="follow" data-id="${follow.id}" data-v="unsent">I didn't send it</button></div>
+  </div>`:""}
+
+  ${lastDump?`<div class="card calm"><h3>Last night's thought, in daylight</h3><p class="small">"${esc(lastDump.text.slice(0,140))}${lastDump.text.length>140?"…":""}"</p>
+    <p class="small muted">Does it feel the same size this morning?</p>
+    <div class="row"><button class="btn sm" data-act="dumpTalk" data-ts="${lastDump.ts}">Talk about it</button><button class="btn sm ghost" data-act="dumpSeen" data-ts="${lastDump.ts}">It's smaller now</button></div></div>`:""}
+
+  ${nudge?`<div class="card">
+    <div class="row between"><h3>${esc(nudge.name)}</h3><span class="pill ${goodTime(nudge.tz)?"":"warn"}">${localTime(nudge.tz)} in ${esc(zoneName(nudge.tz))}</span></div>
+    <p class="small muted">Last talked ${ago(nudge.last)}.${goodTime(nudge.tz)?" Now is a good time to say hello.":" It's late there, so maybe send a message for the morning."}</p>
+    <div class="row"><button class="btn sm primary" data-act="reachPerson" data-id="${nudge.id}">Write to ${esc(nudge.name)}</button><button class="btn sm ghost" data-act="talked" data-id="${nudge.id}">We talked today</button></div>
+  </div>`:`<div class="card"><h3>Add the people who matter</h3><p class="small muted">Saath works best when it can remind you of your people: family back home, an old friend, a cousin nearby.</p><a class="btn sm" href="#people">Add someone</a></div>`}
+
+  <section class="tiles" aria-label="Tools">
+    ${tile("talk","Talk it out","Say what's in your head, in your language.")}
+    ${tile("check","Reality check","\"Why did they reply like that?\" Sort facts from fears.","check")}
+    ${tile("reach","Reach out","Help writing to someone you miss.","reach")}
+    ${tile("night","Night mode","Brain dump, breathing, a sleep story.")}
+    ${tile("unsaid","Unsaid box","Things you can't tell anyone yet.","box")}
+    ${tile("groups","People like me","Small anonymous circles.","groups")}
+  </section>
+
+  <div class="card">
+    <div class="row between"><h3>This month</h3><a class="small" href="#insights">Your patterns</a></div>
+    <div class="grid2">
+      <div class="stat"><strong>${reached}</strong><span class="small muted">times you reached out</span></div>
+      <div class="stat"><strong>${replied}</strong><span class="small muted">real conversations</span></div>
+    </div>
+    <p class="small muted">Saath is working when these numbers grow and you need the app less.</p>
+  </div>
+  ${storeNote()}`;
+}
+function tile(r,t,s,ic){ return `<button type="button" class="tile" data-go="${r}"><span class="ic">${ICON[ic||r]}</span><b>${t}</b><span>${s}</span></button>`; }
+function storeNote(){
+  if(!caps.ready) return `<p class="small muted">Connecting…</p>`;
+  if(Store.mode==="cloud") return `<p class="small muted">Your data is private to you and saved to your Claude account.</p>`;
+  if(Store.mode==="device") return `<p class="small muted">Saved on this device only. Open Saath from its claude.ai link while signed in to keep your data across devices.</p>`;
+  return `<p class="small muted">Nothing is being saved in this view.</p>`;
+}
+
+function vTalk(){
+  const reh = UI.mode.type==="rehearse";
+  const msgs = S.chat.length ? S.chat : [];
+  const hello = reh ? `Let's practise. I'll play ${esc(UI.mode.who)}. Start whenever you're ready, the way you'd really say it.`
+    : `Hi${S.profile.name?" "+esc(S.profile.name):""}. What's going round in your head? Type or speak, in ${esc(S.profile.lang)} or any language.`;
+  const a=UI.analysis;
+  return `
+  <div class="row between">
+    <h2>${reh?"Rehearse with "+esc(UI.mode.who):"Talk it out"}</h2>
+    <div class="row">
+      ${caps.tts?`<button type="button" class="chip" data-act="voice" aria-pressed="${!!S.profile.voice}">${S.profile.voice?"Voice on":"Voice off"}</button>`:""}
+      ${reh?`<button type="button" class="chip" data-act="endRehearse">End practice</button>`:(msgs.length?`<button type="button" class="chip" data-act="newChat">New chat</button>`:"")}
+    </div>
+  </div>
+  ${noAI()&&caps.ready?`<div class="card accent small">${NO_AI_TEXT}</div>`:""}
+  ${UI.crisis?crisisCard():""}
+  <div class="chat" id="chat">
+    <div class="msg ai">${hello}</div>
+    ${msgs.map(m=>renderMsg(m)).join("")}
+    ${UI.busy?`<div class="typing" id="typing">Saath is thinking…</div>`:""}
+  </div>
+  ${a && a.person && !reh?`<div class="card accent"><p>You mentioned <b>${esc(a.person)}</b>. Want to send them a message?</p>
+    <div class="row"><button class="btn sm primary" data-act="reachName" data-name="${esc(a.person)}">Write to ${esc(a.person)}</button><button class="btn sm ghost" data-act="dismissNudge">Not now</button></div></div>`:""}
+  <form class="composer" data-form="chat">
+    <label for="chatIn" class="sr" style="position:absolute;left:-9999px">Message</label>
+    <textarea id="chatIn" rows="1" placeholder="What's on your mind…"></textarea>
+    ${micButton("chatIn")}
+    <button class="iconbtn send" type="submit" aria-label="Send" ${UI.busy?"disabled":""}>${ICON.send}</button>
+  </form>`;
+}
+function renderMsg(m){
+  if(m.role==="user") return `<div class="msg me">${esc(m.content)}</div>`;
+  const parts=String(m.content).split(/\n(?=Tip:)/);
+  return `<div class="msg ai">${esc(parts[0])}</div>${parts[1]?`<div class="msg tip">${esc(parts[1])}</div>`:""}`;
+}
+function crisisCard(){
+  return `<div class="card danger"><h3>You don't have to carry this alone</h3>
+  <p class="small">What you're feeling matters, and talking to a person right now can help. These lines are free and confidential.</p>
+  ${helpList(region())}
+  <p class="small">Or message someone you trust: <button class="btn sm" data-act="reachName" data-name="">Write to someone</button></p></div>`;
+}
+function helpList(r){ return HELP[r].map(h=>`<div class="hl"><span class="small">${esc(h[0])}</span><a href="${h[2]}"><strong>${esc(h[1])}</strong></a></div>`).join(""); }
+
+function vCheck(){
+  const c=UI.check;
+  return `
+  <h2>Reality check</h2>
+  <p class="muted">Paste the message or describe what happened. Saath will separate what was actually said from what your mind is adding.</p>
+  <form class="card" data-form="check">
+    <label for="chkIn">The chat or situation</label>
+    <textarea id="chkIn" placeholder="e.g. I sent a long message to Priya and she just replied 'ok 👍'. She usually writes more.">${esc(UI.checkText||"")}</textarea>
+    <label for="chkWorry">What are you worried it means? (optional)</label>
+    <input id="chkWorry" type="text" placeholder="She's upset with me" value="${esc(UI.checkWorry||"")}">
+    <div class="row">${micButton("chkIn")}<button class="btn primary" type="submit" ${UI.busy?"disabled":""}>${UI.busy?"Looking at it…":"Check it"}</button></div>
+  </form>
+  ${noAI()&&caps.ready?`<div class="card accent small">${NO_AI_TEXT}</div>`:""}
+  ${c?`<div class="card">
+    <h3>What was actually said</h3><ul class="clean">${(c.said||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    <h3>What you might be assuming</h3><ul class="clean">${(c.assuming||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+    <h3>Other possible meanings</h3><ul class="clean">${(c.other_meanings||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+  </div>
+  <div class="card calm"><h3>A calm next step</h3><p>${esc(c.next_step||"")}</p>
+    ${c.draft?`<p class="small muted">If you want to just ask:</p><p>"${esc(c.draft)}"</p><button class="btn sm primary" data-act="useDraft">Send this on WhatsApp</button>`:""}
+  </div>`:""}`;
+}
+
+function vReach(){
+  const d=UI.draftReach||{};
+  const opts=S.people.map(p=>`<option value="${p.id}" ${d.personId===p.id?"selected":""}>${esc(p.name)}</option>`).join("");
+  const intents=["Just saying hi","I miss you","Make a plan to meet","Say sorry","Ask for help","Check everyone's OK at home"];
+  return `
+  <h2>Reach out</h2>
+  <p class="muted">Afraid of being a bother? Most people are glad to hear from you. Let's make the first message easy.</p>
+  <form class="card" data-form="reach">
+    <label for="rPerson">Who do you want to message?</label>
+    ${S.people.length?`<select id="rPerson"><option value="">Someone else…</option>${opts}</select>`:""}
+    <input id="rName" type="text" placeholder="Their name" value="${esc(d.name||"")}" ${S.people.length&&d.personId?'style="display:none"':""}>
+    <label>What do you want to say?</label>
+    <div class="row" role="group" aria-label="Intent">${intents.map(i=>`<button type="button" class="chip" data-act="intent" data-v="${esc(i)}" aria-pressed="${d.intent===i}">${i}</button>`).join("")}</div>
+    <label for="rNote">Anything to add? (optional)</label>
+    <input id="rNote" type="text" placeholder="We haven't talked since Onam" value="${esc(d.note||"")}">
+    <button class="btn primary" type="submit" ${UI.busy?"disabled":""}>${UI.busy?"Writing…":"Help me write it"}</button>
+  </form>
+  ${d.reassure?`<div class="card calm"><p>${esc(d.reassure)}</p></div>`:""}
+  ${d.options?`<div class="card"><h3>Pick one and make it yours</h3>
+    <div class="row" role="group" aria-label="Options">${d.options.map((o,i)=>`<button type="button" class="chip" data-act="pickOpt" data-i="${i}" aria-pressed="${d.pick===i}">Option ${i+1}</button>`).join("")}</div>
+    <label for="rMsg">Your message</label>
+    <textarea id="rMsg">${esc(d.text||"")}</textarea>
+    <div class="row">
+      <a class="btn primary" id="waLink" href="${waHref(d)}" target="_blank" rel="noopener" data-act="sent">Open in WhatsApp</a>
+      <button type="button" class="btn ghost" data-act="copyMsg">Copy</button>
+    </div>
+    <p class="small muted">Saath never sends anything by itself. You choose when to send.</p>
+  </div>`:""}`;
+}
+function personById(id){ return S.people.find(p=>p.id===id); }
+function waHref(d){ const p=d&&d.personId?personById(d.personId):null; const num=p&&p.phone?p.phone.replace(/[^\d]/g,""):""; return "https://wa.me/"+num+"?text="+encodeURIComponent((d&&d.text)||""); }
+
+function vPeople(){
+  return `
+  <div class="row between"><h2>Your people</h2><button class="btn sm" data-act="addPerson">Add someone</button></div>
+  <p class="muted">The people you want to stay close to. Saath shows their local time and reminds you gently, never with guilt.</p>
+  ${S.people.length?`<div class="list">${S.people.map(personCard).join("")}</div>`:`<div class="card"><p>No one here yet. Start with one person: a parent, a sibling, a friend from school.</p><button class="btn primary" data-act="addPerson">Add your first person</button></div>`}`;
+}
+function personCard(p){
+  const d=daysAgo(p.last); const every=p.every||7;
+  const pct=d===null?100:Math.min(100,Math.round(d/every*100));
+  const cls=pct>=100?"bad":pct>=70?"warn":"";
+  return `<div class="card"><div class="person">
+    <div class="avatar" aria-hidden="true">${esc((p.name||"?").slice(0,1).toUpperCase())}</div>
+    <div class="stack" style="gap:8px">
+      <div class="row between"><h3>${esc(p.name)}</h3><span class="pill ${goodTime(p.tz)?"":"warn"}">${localTime(p.tz)} · ${esc(zoneName(p.tz))}</span></div>
+      <p class="small muted">${esc(p.rel||"")}${p.rel?" · ":""}Last talked ${ago(p.last)} · every ${every} days${p.okAsked?` · asked "all OK?" ${ago(p.okAsked)}`:""}</p>
+      <div class="meter" aria-label="Time since last contact"><i class="${cls}" style="width:${pct}%"></i></div>
+      <div class="row">
+        <button class="btn sm primary" data-act="reachPerson" data-id="${p.id}">Message</button>
+        <button class="btn sm ghost" data-act="talked" data-id="${p.id}">Talked today</button>
+        <a class="btn sm ghost" href="https://wa.me/${(p.phone||"").replace(/[^\d]/g,"")}?text=${encodeURIComponent("Hi! Just checking, is everyone OK at home? Reply 👍 if all good 🙂")}" target="_blank" rel="noopener" data-act="okAsk" data-id="${p.id}">All OK at home?</a>
+        <button class="btn sm ghost" data-act="editPerson" data-id="${p.id}">Edit</button>
+      </div>
+    </div></div></div>`;
+}
+
+function vNight(){ return `<p class="muted">Opening Night mode…</p>`; }
+function nightHTML(){
+  const t=UI.nightTab;
+  return `<div class="night" role="dialog" aria-label="Night mode"><div class="inner">
+    <div class="row between"><h2>Night mode</h2><button class="btn sm ghost" data-act="closeNight">Close</button></div>
+    <div class="row" role="group" aria-label="Night tools">
+      ${[["dump","Brain dump"],["breathe","Breathe"],["story","Sleep story"],["scan","Body scan"]].map(([k,l])=>`<button type="button" class="chip" data-act="nightTab" data-v="${k}" aria-pressed="${t===k}">${l}</button>`).join("")}
+    </div>
+    ${t==="dump"?`<div class="card"><p>Put everything in your head here. Saath will keep it safe till morning, so your mind can let go of it for now.</p>
+      <label for="dumpIn" class="muted">Everything on your mind</label>
+      <textarea id="dumpIn" style="min-height:160px" placeholder="Just let it all out…"></textarea>
+      <div class="row">${micButton("dumpIn")}<button class="btn" data-act="dump" ${UI.busy?"disabled":""}>${UI.busy?"Keeping it safe…":"Keep it till morning"}</button></div>
+      ${UI.nightReply?`<p style="font-size:19px">${esc(UI.nightReply)}</p>`:""}</div>`:""}
+    ${t==="breathe"?`<div class="card" style="align-items:center;text-align:center"><p class="muted">Breathe in for 4, hold for 7, out for 8. Four rounds is enough.</p>
+      <div class="breath" id="breath">Ready</div>
+      <button class="btn" data-act="breathe">${UI.breathing?"Stop":"Start"}</button></div>`:""}
+    ${t==="story"?`<div class="card"><p class="muted">A slow story to fall asleep to, in ${esc(S.profile.lang)}.</p>
+      <div class="row" role="group" aria-label="Setting">${["Monsoon rain in Kerala","A quiet desert night outside Dubai","A Himalayan village","Waves at Marine Drive"].map(s=>`<button type="button" class="chip" data-act="storySet" data-v="${esc(s)}" aria-pressed="${UI.storySet===s}">${s}</button>`).join("")}</div>
+      <button class="btn" data-act="story" ${UI.busy?"disabled":""}>${UI.busy?"Writing your story…":"Tell me a story"}</button>
+      ${UI.story?`<div class="story">${esc(UI.story)}</div>${caps.tts?`<button class="btn ghost" data-act="readStory">Read it to me</button>`:""}`:""}</div>`:""}
+    ${t==="scan"?`<div class="card"><p class="muted">Lie down. Spend about three slow breaths on each step.</p>
+      <ol class="clean" style="font-size:19px;gap:10px">
+        <li>Notice your feet. Let them get heavy.</li><li>Soften your calves and knees.</li><li>Let your thighs and hips sink into the bed.</li>
+        <li>Unclench your stomach. Let it rise and fall.</li><li>Drop your shoulders away from your ears.</li><li>Loosen your hands, one finger at a time.</li>
+        <li>Unclench your jaw. Let your tongue rest.</li><li>Soften the space between your eyebrows.</li><li>If a thought comes, say "later" and come back to your breath.</li>
+      </ol></div>`:""}
+    <p class="small muted">If tonight feels unsafe, call ${region()==="india"?"Tele-MANAS on 14416":"the National Hope line on 800 4673"}, or tap "Need help now" after closing.</p>
+  </div></div>`;
+}
+
+function vUnsaid(){
+  return `
+  <h2>Unsaid box</h2>
+  <p class="muted">Write what you can't tell anyone yet. It stays private to you. When you're ready, practise saying it.</p>
+  <form class="card" data-form="unsaid">
+    <label for="unIn">What's unsaid</label>
+    <textarea id="unIn" placeholder="I'm not happy in this job, and I'm scared to tell my parents."></textarea>
+    <label for="unWho">Who would you want to tell, someday? (optional)</label>
+    <input id="unWho" type="text" placeholder="My father">
+    <div class="row">${micButton("unIn")}<button class="btn" type="submit">Keep it here</button></div>
+  </form>
+  <div class="list">${[...S.unsaid].reverse().map(u=>`<div class="card"><p>${esc(u.text)}</p>
+    <p class="small muted">${new Date(u.ts).toLocaleDateString()}${u.who?" · for "+esc(u.who):""}</p>
+    <div class="row">${u.who?`<button class="btn sm primary" data-act="rehearse" data-id="${u.id}">Practise telling ${esc(u.who)}</button>`:""}
+    <button class="btn sm ghost" data-act="delUnsaid" data-id="${u.id}">Delete</button></div></div>`).join("")}</div>
+  ${S.unsaid.length?`<button class="btn ghost" data-act="delAllUnsaid">Delete everything in the box</button>`:""}`;
+}
+
+function anonName(id){ const a=["Quiet","Gentle","Brave","Soft","Kind","Calm","Warm","Steady","Bright","Patient"],n=["Mango","Monsoon","Lotus","Falcon","Palm","Lantern","Pebble","Sparrow","Jasmine","Dune"]; let h=0; for(const c of String(id||"x")) h=(h*31+c.charCodeAt(0))>>>0; return a[h%10]+" "+n[(h>>4)%10]+" "+(h%90+10); }
+function vGroups(){
+  const g=GROUPS.find(x=>x[0]===UI.groupKey)||GROUPS[0];
+  const all=[]; const meTooCount={};
+  UI.groupDocs.forEach(d=>{ (d.metoo||[]).forEach(k=>meTooCount[k]=(meTooCount[k]||0)+1); (d.posts||[]).forEach(p=>{ if(p.g===g[0]) all.push({...p, author:d.id}); }); });
+  all.sort((a,b)=>b.ts-a.ts);
+  const canShare = caps.db && Store.uid;
+  return `
+  <h2>People like me</h2>
+  <p class="muted">Small circles where nobody sees your name. Feeling "I'm not the only one" helps.</p>
+  <div class="row" role="group" aria-label="Circles">${GROUPS.map(x=>`<button type="button" class="chip" data-act="group" data-v="${x[0]}" aria-pressed="${x[0]===g[0]}">${x[1]}</button>`).join("")}</div>
+  <div class="card calm"><h3>${g[1]}</h3><p class="small">${g[2]}</p></div>
+  ${canShare?`<form class="card" data-form="post">
+    <label for="postIn">Share something (you'll appear as ${esc(anonName(Store.uid))})</label>
+    <textarea id="postIn" placeholder="Three years in Dubai and Sunday evenings still feel empty."></textarea>
+    <p class="small muted">No names, numbers or locations. Posts are checked for safety before they appear.</p>
+    <button class="btn" type="submit" ${UI.busy?"disabled":""}>${UI.busy?"Checking…":"Share anonymously"}</button>
+  </form>`:`<div class="card accent small">Circles work when Saath is opened from its claude.ai link while you're signed in.</div>`}
+  ${UI.groupsNote?`<p class="small muted">${esc(UI.groupsNote)}</p>`:""}
+  <div class="card">
+    ${UI.groupsLoading&&!all.length?`<p class="muted">Loading the circle…</p>`:""}
+    ${!UI.groupsLoading&&!all.length?`<p class="muted">No posts in this circle yet. Yours could be the first one someone else needs to read.</p>`:""}
+    ${all.slice(0,60).map(p=>{ const k=p.author+":"+p.id; const mine=S.metoo.includes(k); const isMe=p.author===Store.uid; return `<div class="post">
+      <p class="small muted">${esc(anonName(p.author))} · ${ago(p.ts)}</p><p>${esc(p.text)}</p>
+      <div class="row">${isMe?`<span class="pill">You</span><button class="btn sm ghost" data-act="delPost" data-id="${p.id}">Delete</button>`:`<button type="button" class="chip" data-act="metoo" data-k="${esc(k)}" aria-pressed="${mine}">Me too${meTooCount[k]?" · "+meTooCount[k]:""}</button>`}</div></div>`; }).join("")}
+  </div>`;
+}
+
+function vInsights(){
+  const c=S.checkins;
+  const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const heavyByDay=days.map((_,i)=>c.filter(x=>new Date(x.ts).getDay()===i && (x.mood<=2||x.lonely)).length);
+  const slots=[["Morning",5,12],["Afternoon",12,17],["Evening",17,22],["Late night",22,29]];
+  const heavyBySlot=slots.map(([_,a,b])=>c.filter(x=>{ let h=new Date(x.ts).getHours(); if(h<5) h+=24; return h>=a&&h<b&&(x.mood<=2||x.lonely); }).length);
+  const maxD=Math.max(1,...heavyByDay), maxS=Math.max(1,...heavyBySlot);
+  const topD=heavyByDay.indexOf(Math.max(...heavyByDay)), topS=heavyBySlot.indexOf(Math.max(...heavyBySlot));
+  const any=heavyByDay.some(Boolean);
+  return `
+  <h2>Your patterns</h2>
+  <p class="muted">Based on your check-ins. The more you check in, the clearer this gets.</p>
+  <div class="card">
+    <div class="grid2">
+      <div class="stat"><strong>${c.length}</strong><span class="small muted">check-ins</span></div>
+      <div class="stat"><strong>${S.reachouts.length}</strong><span class="small muted">messages to real people</span></div>
+      <div class="stat"><strong>${S.reachouts.filter(r=>r.status==="replied").length}</strong><span class="small muted">conversations that happened</span></div>
+      <div class="stat"><strong>${S.dumps.length}</strong><span class="small muted">night thoughts set down</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Heavy or lonely moments, by day</h3>
+    <div class="bars">${heavyByDay.map((v,i)=>`<div><b class="${any&&i===topD?"hi":""}" style="height:${v/maxD*100}%"></b><span>${days[i]}</span></div>`).join("")}</div>
+    <h3>By time of day</h3>
+    <div class="bars">${heavyBySlot.map((v,i)=>`<div><b class="${any&&i===topS?"hi":""}" style="height:${v/maxS*100}%"></b><span>${slots[i][0]}</span></div>`).join("")}</div>
+    <p>${any?`Your mind feels heaviest on <b>${days[topD]}</b>s, mostly in the <b>${slots[topS][0].toLowerCase()}</b>. Try planning a call with someone before then.`:"No heavy moments logged yet. Check in from the Home screen to start seeing patterns."}</p>
+  </div>`;
+}
+
+function vPrefs(){
+  const p=S.profile;
+  return `
+  <h2>Settings</h2>
+  <form class="card" data-form="prefs">
+    <label for="pName">What should Saath call you?</label>
+    <input id="pName" type="text" value="${esc(p.name)}" placeholder="Your first name">
+    <label for="pLang">Language for replies</label>
+    <select id="pLang">${Object.keys(LANGS).map(l=>`<option ${p.lang===l?"selected":""}>${l}</option>`).join("")}</select>
+    <label for="pHome">Where do you live?</label>
+    <select id="pHome">${Object.keys(HOMES).map(h=>`<option ${p.home===h?"selected":""}>${h}</option>`).join("")}</select>
+    ${caps.tts?`<label><input type="checkbox" id="pVoice" ${p.voice?"checked":""}> Read Saath's replies aloud</label>`:""}
+    <button class="btn" type="submit">Save</button>
+  </form>
+  <div class="card"><h3>Privacy</h3>
+    <p class="small">${Store.mode==="cloud"?"Your chats, people and notes are stored in your own private space. Nobody else using Saath can see them, including whoever shared it with you. Posts in People like me are shared anonymously.":"Your data is stored only in this browser."}</p>
+    <p class="small">Saath is a wellbeing companion, not therapy or medical care. In an emergency, call your local emergency number.</p>
+    <button class="btn ghost" data-act="clearChat">Clear chat history</button>
+    <button class="btn danger" data-act="wipe">Delete all my data</button>
+  </div>`;
+}
+
+function vMore(){
+  return `<h2>More</h2><section class="tiles">
+    ${tile("check","Reality check","Facts vs. fears in any chat.","check")}
+    ${tile("reach","Reach out","Write to someone you miss.","reach")}
+    ${tile("unsaid","Unsaid box","Private, and practise saying it.","box")}
+    ${tile("groups","People like me","Anonymous circles.","groups")}
+    ${tile("insights","Your patterns","When your mind is heaviest.","chart")}
+    ${tile("prefs","Settings","Name, language, privacy.","gear")}
+  </section>
+  <div class="card"><h3>Helplines</h3>${helpList(region())}<p class="small muted">${region()==="india"?"In the UAE? Change where you live in Settings.":"In India? Change where you live in Settings."}</p></div>`;
+}
+
+/* ============ Render ============ */
+function render(){
+  const r=route(); renderTabs();
+  const map={home:vHome,talk:vTalk,check:vCheck,reach:vReach,people:vPeople,night:vNight,unsaid:vUnsaid,groups:vGroups,insights:vInsights,prefs:vPrefs,more:vMore};
+  $("#view").innerHTML=map[r]();
+  if(r==="night") openNight(); else if(UI.nightOpen) closeNight(true);
+  if(r==="talk"){ const c=$("#chat"); if(c) setTimeout(()=>window.scrollTo(0,document.body.scrollHeight),0); }
+  if(r==="groups") ensureGroups();
+  if(r==="reach") bindReach();
+  if(!S.profile.onboarded && caps.ready && !UI.sheet) onboarding();
+}
+function openNight(){ UI.nightOpen=true; $("#layer").innerHTML=nightHTML(); }
+function closeNight(silent){ UI.nightOpen=false; stopBreath(); $("#layer").innerHTML=""; if(!silent && route()==="night") go("home"); }
+
+/* ============ Sheets ============ */
+function sheet(html){ UI.sheet=true; $("#layer").innerHTML=`<div class="sheet-wrap" data-act="closeSheetBg"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`; const f=$("#layer input, #layer select, #layer button"); if(f) f.focus(); }
+function closeSheet(){ UI.sheet=false; $("#layer").innerHTML=""; if(UI.nightOpen) openNight(); }
+function onboarding(){
+  sheet(`<h2>Welcome to Saath</h2>
+  <p class="muted">A calm place for a busy mind, and a gentle push back towards your people.</p>
+  <form class="stack" data-form="onboard">
+    <label for="oName">What should we call you?</label><input id="oName" type="text" placeholder="Your first name">
+    <label for="oLang">Which language do you feel in?</label><select id="oLang">${Object.keys(LANGS).map(l=>`<option>${l}</option>`).join("")}</select>
+    <label for="oHome">Where do you live?</label><select id="oHome">${Object.keys(HOMES).map(h=>`<option>${h}</option>`).join("")}</select>
+    <p class="small muted">Saath is not therapy. If you're ever in danger, the "Need help now" button is always at the top.</p>
+    <button class="btn primary" type="submit">Start</button>
+  </form>`);
+}
+function helpSheet(){
+  const r=region(), o=r==="india"?"uae":"india";
+  sheet(`<h2>Talk to someone now</h2><p>You deserve support. These lines are free and confidential.</p>
+  <div class="card">${helpList(r)}</div>
+  <details><summary class="small">${o==="india"?"In India":"In the UAE"}</summary><div class="card" style="margin-top:8px">${helpList(o)}</div></details>
+  <p class="small muted">If a number doesn't open from here, dial it on your phone.</p>
+  <div class="row"><button class="btn primary" data-act="reachName" data-name="">Message someone I trust</button><button class="btn ghost" data-act="closeSheet">Close</button></div>`);
+}
+function personSheet(p){
+  p=p||{id:"",name:"",rel:"",phone:"",tz:"Asia/Kolkata",every:7};
+  sheet(`<h2>${p.id?"Edit "+esc(p.name):"Add someone"}</h2>
+  <form class="stack" data-form="person" data-id="${p.id}">
+    <label for="psName">Name</label><input id="psName" type="text" value="${esc(p.name)}" required placeholder="Amma, Vishnu, Priya…">
+    <label for="psRel">Who are they to you?</label><input id="psRel" type="text" value="${esc(p.rel)}" placeholder="Mother, school friend, cousin">
+    <label for="psPhone">WhatsApp number with country code (optional)</label><input id="psPhone" type="tel" value="${esc(p.phone)}" placeholder="+91 98xxxxxxx">
+    <label for="psTz">Where are they?</label><select id="psTz">${ZONES.map(z=>`<option value="${z[0]}" ${p.tz===z[0]?"selected":""}>${z[1]}</option>`).join("")}</select>
+    <label for="psEvery">Remind me to reach out every… (days)</label><input id="psEvery" type="number" min="1" max="90" value="${p.every||7}">
+    <div class="row"><button class="btn primary" type="submit">Save</button><button class="btn ghost" type="button" data-act="closeSheet">Cancel</button>
+    ${p.id?`<button class="btn ghost" type="button" data-act="delPerson" data-id="${p.id}">Remove</button>`:""}</div>
+  </form>`);
+}
+function confirmSheet(text, act){
+  sheet(`<h3>${esc(text)}</h3><p class="small muted">This can't be undone.</p><div class="row"><button class="btn danger" data-act="${act}Yes">Yes, delete</button><button class="btn ghost" data-act="closeSheet">Cancel</button></div>`);
+}
+
+/* ============ Actions ============ */
+async function sendChat(text){
+  text=text.trim(); if(!text||UI.busy) return;
+  if(!caps.ready){ toast("Still connecting. Try again in a few seconds."); $("#chatIn").value=text; return; }
+  if(CRISIS_RE.test(text)) UI.crisis=true;
+  S.chat.push({role:"user",content:text,ts:now()}); trimChat(); save("chat");
+  UI.analysis=null;
+  if(noAI()){ S.chat.push({role:"assistant",content:NO_AI_TEXT,ts:now()}); save("chat"); render(); return; }
+  UI.busy=true; render();
+  const history=S.chat.filter(m=>m.mode===undefined || m.mode===UI.mode.type);
+  const msgs=buildMessages(history.slice(-24), companionPrompt());
+  const live={role:"assistant",content:"",ts:now()};
+  try{
+    const res=await caps.sample(msgs,{cache:false,onText:({text})=>{ live.content=text; const t=$("#typing"); if(t){ t.className="msg ai"; t.textContent=text; } }});
+    live.content=(res&&res.text)||live.content||"…";
+  }catch(e){ live.content=aiErrorText(e); live.err=true; }
+  UI.busy=false; S.chat.push(live); trimChat(); save("chat"); render();
+  if(!live.err){ speak(live.content.split(/\nTip:/)[0]); if(UI.mode.type==="companion") analyse(); }
+}
+function trimChat(){ if(S.chat.length>60) S.chat=S.chat.slice(-60); }
+async function analyse(){
+  if(noAI()) return;
+  const recent=S.chat.slice(-6).map(m=>(m.role==="user"?"PERSON: ":"SAATH: ")+m.content).join("\n");
+  try{
+    const v=await caps.sample.json(`Read this chat from a wellbeing app. Return JSON only: {"risk":"none"|"concern"|"crisis","person":string|null}.
+"risk" is "crisis" only if the PERSON mentions suicide, self-harm, or being in danger.
+"person" is the name or relation (e.g. "Vishnu", "Amma", "my sister") of ONE real person the PERSON seems to miss, trust, or want to talk to, and only if reaching out would genuinely help right now; else null.
+Their saved people: ${S.people.map(p=>p.name).join(", ")||"none"}.
+CHAT:
+${recent}`,{modelTier:"quick",cache:false});
+    if(v && v.risk==="crisis") UI.crisis=true;
+    if(v && v.person && !UI.dismissed?.includes(v.person)) UI.analysis={person:String(v.person).slice(0,40)};
+    if(route()==="talk") render();
+  }catch(e){}
+}
+async function summarise(){
+  const conv=S.chat.filter(m=>!m.mode||m.mode==="companion");
+  if(noAI()||conv.filter(m=>m.role==="user").length<2) return;
+  const text=conv.slice(-20).map(m=>(m.role==="user"?"PERSON: ":"SAATH: ")+m.content).join("\n");
+  try{
+    const r=await caps.sample(`Summarise this conversation in at most 2 short sentences in English, as private notes for a companion to remember next time: the main worry, people mentioned, and what helped. No advice.\n\n${text}`,{modelTier:"quick",cache:false});
+    if(r&&r.text){ S.memory.push(r.text.trim().slice(0,400)); if(S.memory.length>10) S.memory=S.memory.slice(-10); save("memory"); }
+  }catch(e){}
+}
+async function runCheck(text, worry){
+  if(!text.trim()) { toast("Paste the chat or describe what happened first."); return; }
+  UI.checkText=text; UI.checkWorry=worry;
+  if(CRISIS_RE.test(text+" "+worry)){ helpSheet(); }
+  if(noAI()){ render(); return; }
+  UI.busy=true; UI.check=null; render();
+  try{
+    UI.check=await caps.sample.json(`You help an overthinker see a situation clearly. ${langLine()}
+Situation or chat:
+"""${text}"""
+Their worry: "${worry||"not stated"}"
+Return JSON only:
+{"said":[2-4 short neutral statements of only what was literally said or done],
+"assuming":[1-3 assumptions their mind may be adding],
+"other_meanings":[2-4 realistic, kinder explanations],
+"next_step":"one calm, practical sentence",
+"draft":"a short, natural, low-pressure message they could send to simply ask, or empty string if asking isn't wise"}`,{modelTier:"default",cache:false});
+  }catch(e){ toast(aiErrorText(e),4000); }
+  UI.busy=false; render();
+}
+async function draftReach(){
+  const d=UI.draftReach||(UI.draftReach={});
+  const sel=$("#rPerson"); d.personId=sel?sel.value:"";
+  const p=d.personId?personById(d.personId):null;
+  d.name=p?p.name:($("#rName").value.trim()); d.note=$("#rNote").value.trim();
+  if(!d.name){ toast("Add who you want to message."); return; }
+  if(!d.intent) d.intent="Just saying hi";
+  if(noAI()){
+    const t={"Just saying hi":`Hey ${d.name}! Was just thinking about you. How have you been? 🙂`,"I miss you":`Hi ${d.name}, I've been missing you lately. Would love to catch up properly soon.`,"Make a plan to meet":`Hey ${d.name}! It's been too long. Free for chai this weekend?`,"Say sorry":`Hi ${d.name}, I've been thinking about what happened and I'm sorry. Can we talk?`,"Ask for help":`Hi ${d.name}, things have been a bit heavy for me lately. Do you have some time to talk?`,"Check everyone's OK at home":`Hi ${d.name}! Just checking, is everyone OK at home? 🙂`};
+    d.reassure="Most people feel happy, not bothered, when someone reaches out first."; d.options=[t[d.intent]]; d.pick=0; d.text=d.options[0]; render(); return;
+  }
+  UI.busy=true; render();
+  try{
+    const v=await caps.sample.json(`Help someone who overthinks send a WhatsApp message to ${d.name}${p&&p.rel?" ("+p.rel+")":""}. Intent: ${d.intent}. Extra context: ${d.note||"none"}. Sender's name: ${S.profile.name||"unknown"}.
+Write the messages in ${LANGS[S.profile.lang]||"English"}, the way real people text in India and the Gulf: short, warm, natural, low pressure, no mention of apps or AI, at most one emoji.
+Return JSON only: {"reassure":"one kind sentence, in the same language, easing the fear of being a bother","options":["message 1","message 2","message 3"]}`,{modelTier:"default",cache:false});
+    d.reassure=v.reassure; d.options=(v.options||[]).slice(0,3); d.pick=0; d.text=d.options[0]||"";
+  }catch(e){ toast(aiErrorText(e),4000); }
+  UI.busy=false; render();
+}
+function bindReach(){
+  const sel=$("#rPerson"), nm=$("#rName"), msg=$("#rMsg");
+  if(sel) sel.onchange=()=>{ const d=UI.draftReach||(UI.draftReach={}); d.personId=sel.value; nm.style.display=sel.value?"none":""; };
+  if(msg) msg.oninput=()=>{ UI.draftReach.text=msg.value; $("#waLink").href=waHref(UI.draftReach); };
+}
+function logSent(){
+  const d=UI.draftReach; if(!d||!d.text) return;
+  S.reachouts.push({id:uid(),person:d.name,personId:d.personId||"",ts:now(),status:"sent"});
+  const p=d.personId&&personById(d.personId); if(p){ p.last=now(); save("people"); }
+  save("reachouts"); setTimeout(()=>toast("Nice. Saath will ask later how it went."),400);
+}
+async function nightDump(){
+  const t=$("#dumpIn").value.trim(); if(!t) return;
+  if(CRISIS_RE.test(t)){ closeNight(); helpSheet(); return; }
+  S.dumps.push({ts:now(),text:t}); if(S.dumps.length>40) S.dumps=S.dumps.slice(-40); save("dumps");
+  if(noAI()){ UI.nightReply="It's safe here now. You can pick it up in the morning. For tonight, just breathe."; openNight(); return; }
+  UI.busy=true; openNight();
+  try{ const r=await caps.sample(`Someone who overthinks wrote this at night before sleep. ${langLine()} Reply in 2 short, soothing sentences: tell them it's kept safe till morning and they can let go for tonight. No advice, no questions.\n\n"""${t}"""`,{modelTier:"quick",cache:false}); UI.nightReply=r.text; }
+  catch(e){ UI.nightReply="It's kept safe till morning. Let your mind rest now."; }
+  UI.busy=false; openNight(); speak(UI.nightReply);
+}
+async function nightStory(){
+  if(noAI()){ UI.story="Story mode needs AI replies. "+NO_AI_TEXT; openNight(); return; }
+  UI.busy=true; openNight();
+  try{ const r=await caps.sample(`Write a slow, gentle sleep story of about 220 words in ${LANGS[S.profile.lang]||"English"}. Setting: ${UI.storySet||"Monsoon rain in Kerala"}. Second person ("you"), present tense, soft sensory details, no conflict or surprises, sentences that get slower and softer, ending with the listener drifting to sleep. Plain text only, no title.`,{modelTier:"default",cache:false}); UI.story=r.text; }
+  catch(e){ UI.story=aiErrorText(e); }
+  UI.busy=false; openNight();
+}
+let breathTimer=null;
+function stopBreath(){ clearTimeout(breathTimer); breathTimer=null; UI.breathing=false; }
+function runBreath(){
+  const el=()=>$("#breath"); let round=0;
+  const steps=[["Breathe in",4,1.35],["Hold",7,1.35],["Breathe out",8,1]];
+  const step=(i)=>{ if(!UI.breathing) return; if(i===0){ round++; if(round>4){ stopBreath(); if(el()){ el().textContent="Well done"; el().style.transform="scale(1)"; } openNight(); return; } }
+    const [label,secs,scale]=steps[i]; const b=el(); if(b){ b.style.transitionDuration=secs+"s"; b.style.transform=`scale(${scale})`; b.textContent=label+" · "+secs; }
+    breathTimer=setTimeout(()=>step((i+1)%3),secs*1000); };
+  step(0);
+}
+
+/* Groups (shared, anonymous) */
+function ensureGroups(){
+  if(UI.groupsSub||!caps.db) return;
+  UI.groupsLoading=true;
+  const t=setTimeout(()=>{ UI.groupsNote="The circle is taking a while to load. It may be out of date."; UI.groupsLoading=false; if(route()==="groups") render(); },10000);
+  UI.groupsSub=caps.db.collection("circle_posts").onSnapshot(snap=>{
+    UI.groupDocs=snap.docs.map(d=>({id:d.id,...(d.data()||{})}));
+    if(!snap.metadata.fromCache){ clearTimeout(t); UI.groupsNote=""; }
+    UI.groupsLoading=false; if(route()==="groups") render();
+  }, err=>{ clearTimeout(t); UI.groupsLoading=false; UI.groupsNote="Circles can't be loaded right now."; if(route()==="groups") render(); });
+}
+let groupWriting=false;
+async function writeGroupDoc(){
+  if(!caps.db||!Store.uid) return; if(groupWriting){ setTimeout(writeGroupDoc,600); return; }
+  groupWriting=true;
+  try{ await caps.db.doc("circle_posts/"+Store.uid).set({posts:S.groupPosts.slice(-40),metoo:S.metoo.slice(-300)}); }
+  catch(e){ if(e&&e.code==="invalid_argument") toast("You can read circles but not post. Ask whoever shared Saath for Contributor access.",5000); }
+  groupWriting=false;
+}
+async function postToGroup(text){
+  text=text.trim(); if(!text) return;
+  if(text.length>600){ toast("Keep it under 600 characters."); return; }
+  if(CRISIS_RE.test(text)){ helpSheet(); return; }
+  UI.busy=true; render();
+  let ok=true, why="";
+  if(!noAI()){
+    try{ const v=await caps.sample.json(`Moderate a post for an anonymous peer-support circle about loneliness and overthinking. Return JSON only: {"allow":boolean,"risk":"none"|"crisis","reason":"short, kind reason if not allowed"}.
+Block: phone numbers, emails, full names or exact addresses, hate, harassment, sexual content, ads, encouraging self-harm. Allow honest sadness and venting. "risk" is "crisis" if the writer mentions suicide or self-harm.
+POST: """${text}"""`,{modelTier:"quick",cache:false});
+      if(v){ ok=!!v.allow; why=v.reason||""; if(v.risk==="crisis"){ UI.busy=false; render(); helpSheet(); return; } } }
+    catch(e){ /* allow if moderation unavailable, but basic filter below */ }
+  }
+  if(/\+?\d[\d\s-]{7,}\d|@[\w.-]+\.\w+/.test(text)){ ok=false; why="Please remove phone numbers or emails to keep everyone safe."; }
+  UI.busy=false;
+  if(!ok){ toast(why||"This post can't be shared. Try rewording it.",4500); render(); return; }
+  S.groupPosts.push({id:uid(),g:UI.groupKey,text,ts:now()}); save("groupPosts"); await writeGroupDoc(); render();
+}
+
+/* ============ Events ============ */
+document.addEventListener("click", async (e)=>{
+  const g=e.target.closest("[data-go]"); if(g){ go(g.dataset.go); return; }
+  const b=e.target.closest("[data-act]"); if(!b) return;
+  const a=b.dataset.act, id=b.dataset.id;
+  if(a==="closeSheetBg"){ if(e.target===b) closeSheet(); return; }
+  switch(a){
+    case "help": helpSheet(); break;
+    case "closeSheet": closeSheet(); break;
+    case "mic": toggleMic(b); break;
+    case "mood": { const v=Number(b.dataset.v); const last=S.checkins[S.checkins.length-1]; if(last&&now()-last.ts<30*60000){ last.mood=v; last.ts=now(); } else S.checkins.push({ts:now(),mood:v,lonely:false}); if(S.checkins.length>500) S.checkins=S.checkins.slice(-500); save("checkins"); render(); break; }
+    case "lonely": { const last=S.checkins[S.checkins.length-1]; if(last){ last.lonely=!last.lonely; save("checkins"); render(); } break; }
+    case "follow": { const r=S.reachouts.find(x=>x.id===id); if(r){ if(b.dataset.v==="unsent"){ S.reachouts=S.reachouts.filter(x=>x.id!==id); } else r.status=b.dataset.v; if(b.dataset.v==="noreply") r.ts=now(); save("reachouts"); toast(b.dataset.v==="replied"?"That's lovely. Real conversations matter most.":b.dataset.v==="noreply"?"People are busy. A late reply isn't a no.":"That's okay. It'll be here when you're ready."); render(); } break; }
+    case "dumpSeen": { const d=S.dumps.find(x=>String(x.ts)===b.dataset.ts); if(d){ d.seen=true; save("dumps"); render(); } break; }
+    case "dumpTalk": { const d=S.dumps.find(x=>String(x.ts)===b.dataset.ts); if(d){ d.seen=true; save("dumps"); UI.mode={type:"companion"}; go("talk"); setTimeout(()=>sendChat("Last night I wrote this before sleeping: \""+d.text+"\". Can we look at it now?"),50); } break; }
+    case "reachPerson": { const p=personById(id); UI.draftReach={personId:id,name:p?p.name:""}; closeSheet(); go("reach"); break; }
+    case "reachName": { const n=b.dataset.name||""; const p=S.people.find(x=>x.name.toLowerCase()===n.toLowerCase()); UI.draftReach=p?{personId:p.id,name:p.name}:{name:n}; UI.analysis=null; closeSheet(); go("reach"); break; }
+    case "dismissNudge": UI.dismissed=[...(UI.dismissed||[]),UI.analysis&&UI.analysis.person]; UI.analysis=null; render(); break;
+    case "talked": { const p=personById(id); if(p){ p.last=now(); save("people"); toast("Logged. "+p.name+" is lucky to have you."); render(); } break; }
+    case "okAsk": { const p=personById(id); if(p){ p.okAsked=now(); save("people"); setTimeout(render,300); } break; }
+    case "addPerson": personSheet(); break;
+    case "editPerson": personSheet(personById(id)); break;
+    case "delPerson": S.people=S.people.filter(p=>p.id!==id); save("people"); closeSheet(); render(); break;
+    case "voice": S.profile.voice=!S.profile.voice; save("profile"); render(); break;
+    case "newChat": await summarise(); S.chat=[]; UI.analysis=null; UI.crisis=false; save("chat"); render(); toast("Started fresh. Saath still remembers the gist."); break;
+    case "endRehearse": UI.mode={type:"companion"}; S.chat=S.chat.filter(m=>m.mode!=="rehearse"); save("chat"); render(); break;
+    case "intent": { UI.draftReach=UI.draftReach||{}; UI.draftReach.intent=b.dataset.v; UI.draftReach.note=$("#rNote")?.value||""; const nm=$("#rName"); if(nm) UI.draftReach.name=nm.value; const sel=$("#rPerson"); if(sel) UI.draftReach.personId=sel.value; render(); break; }
+    case "pickOpt": { const d=UI.draftReach; d.pick=Number(b.dataset.i); d.text=d.options[d.pick]; render(); break; }
+    case "sent": logSent(); break;
+    case "copyMsg": { const t=$("#rMsg").value; navigator.clipboard?.writeText(t).then(()=>{ toast("Copied. Paste it into any chat."); logSent(); }).catch(()=>toast("Couldn't copy. Select the text and copy it.")); break; }
+    case "useDraft": { const c=UI.check; UI.draftReach={name:"",text:c.draft,options:[c.draft],pick:0,reassure:"Asking directly is kinder to yourself than guessing all night."}; go("reach"); break; }
+    case "closeNight": closeNight(); break;
+    case "nightTab": stopBreath(); UI.nightTab=b.dataset.v; UI.nightReply=""; openNight(); break;
+    case "dump": nightDump(); break;
+    case "breathe": if(UI.breathing){ stopBreath(); openNight(); } else { UI.breathing=true; openNight(); runBreath(); } break;
+    case "storySet": UI.storySet=b.dataset.v; openNight(); break;
+    case "story": nightStory(); break;
+    case "readStory": caps.tts&&caps.tts.speak(UI.story.slice(0,1900),{rate:0.85,voice:"airy"}).catch(()=>{}); break;
+    case "rehearse": { const u=S.unsaid.find(x=>x.id===id); if(u){ S.chat=S.chat.filter(m=>m.mode!=="rehearse"); UI.mode={type:"rehearse",who:u.who,text:u.text}; go("talk"); } break; }
+    case "delUnsaid": S.unsaid=S.unsaid.filter(u=>u.id!==id); save("unsaid"); render(); break;
+    case "delAllUnsaid": confirmSheet("Delete everything in your Unsaid box?","delAllUnsaid"); break;
+    case "delAllUnsaidYes": S.unsaid=[]; save("unsaid"); closeSheet(); render(); break;
+    case "group": UI.groupKey=b.dataset.v; render(); break;
+    case "metoo": { const k=b.dataset.k; S.metoo=S.metoo.includes(k)?S.metoo.filter(x=>x!==k):[...S.metoo,k]; save("metoo"); render(); writeGroupDoc(); break; }
+    case "delPost": S.groupPosts=S.groupPosts.filter(p=>p.id!==id); save("groupPosts"); await writeGroupDoc(); render(); break;
+    case "clearChat": confirmSheet("Clear your chat history?","clearChat"); break;
+    case "clearChatYes": S.chat=[]; S.memory=[]; save("chat","memory"); closeSheet(); render(); break;
+    case "wipe": confirmSheet("Delete all your Saath data?","wipe"); break;
+    case "wipeYes": await Store.wipe(); closeSheet(); toast("All your data is deleted."); go("home"); break;
+  }
+});
+document.addEventListener("submit", (e)=>{
+  const f=e.target.closest("[data-form]"); if(!f) return; e.preventDefault();
+  if(Dict.on && caps.dictation) caps.dictation.stop().catch(()=>{});
+  switch(f.dataset.form){
+    case "chat": { const t=$("#chatIn").value; $("#chatIn").value=""; if(UI.mode.type==="rehearse"){ sendRehearse(t); } else sendChat(t); break; }
+    case "check": runCheck($("#chkIn").value,$("#chkWorry").value); break;
+    case "reach": draftReach(); break;
+    case "unsaid": { const t=$("#unIn").value.trim(); if(!t) return; S.unsaid.push({id:uid(),text:t,who:$("#unWho").value.trim(),ts:now()}); save("unsaid"); if(CRISIS_RE.test(t)) helpSheet(); render(); toast("Kept safe."); break; }
+    case "post": postToGroup($("#postIn").value); break;
+    case "prefs": { S.profile.name=$("#pName").value.trim(); S.profile.lang=$("#pLang").value; S.profile.home=$("#pHome").value; const v=$("#pVoice"); if(v) S.profile.voice=v.checked; save("profile"); toast("Saved."); render(); break; }
+    case "onboard": { S.profile.name=$("#oName").value.trim(); S.profile.lang=$("#oLang").value; S.profile.home=$("#oHome").value; S.profile.onboarded=true; save("profile"); closeSheet(); render(); break; }
+    case "person": {
+      const pid=f.dataset.id; const data={name:$("#psName").value.trim(),rel:$("#psRel").value.trim(),phone:$("#psPhone").value.trim(),tz:$("#psTz").value,every:Math.max(1,Math.min(90,Number($("#psEvery").value)||7))};
+      if(!data.name) return;
+      if(pid){ Object.assign(personById(pid),data); } else S.people.push({id:uid(),last:null,...data});
+      save("people"); closeSheet(); render(); break;
+    }
+  }
+});
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter" && !e.shiftKey && e.target.id==="chatIn"){ e.preventDefault(); e.target.form.requestSubmit(); }
+  if(e.key==="Escape" && UI.sheet) closeSheet();
+});
+function sendRehearse(t){
+  t=t.trim(); if(!t) return;
+  S.chat.push({role:"user",content:t,ts:now(),mode:"rehearse"});
+  if(noAI()){ S.chat.push({role:"assistant",content:NO_AI_TEXT,ts:now(),mode:"rehearse"}); render(); return; }
+  UI.busy=true; render();
+  const msgs=buildMessages(S.chat.filter(m=>m.mode==="rehearse").slice(-20), companionPrompt());
+  const live={role:"assistant",content:"",ts:now(),mode:"rehearse"};
+  caps.sample(msgs,{cache:false,onText:({text})=>{ live.content=text; const tEl=$("#typing"); if(tEl){ tEl.className="msg ai"; tEl.textContent=text; } }})
+    .then(r=>{ live.content=r.text||live.content; }).catch(e=>{ live.content=aiErrorText(e); })
+    .finally(()=>{ UI.busy=false; S.chat.push(live); save("chat"); render(); speak(live.content.split(/\nTip:/)[0]); });
+}
+
+/* ============ Boot ============ */
+render();
+(async function boot(){
+  const use = n => (window.claude && typeof window.claude.use==="function") ? window.claude.use(n).catch(()=>null) : Promise.resolve(null);
+  const [sample, db, user, dictation, tts] = await Promise.all(["sample","db","user","dictation","tts"].map(use));
+  Object.assign(caps,{sample,db,user,dictation,tts});
+  wireDictation();
+  await Store.init();
+  caps.ready=true;
+  render();
+})();
+</script>
+</body>
+</html>
